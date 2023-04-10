@@ -4,10 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { chromium } from 'playwright'
 
-const spinner = ora({
-  text: 'Loading scrapper',
-  spinner: 'material'
-}).start()
+const spinner = ora('Loading scrapper').start()
 
 const readAndLoadFile = async ({ fileName = 'accounts.csv', encoding = 'utf8', delimiter = '' }) => {
   const styleDeLimiter = delimiter === 'google' ? ',' : ';'
