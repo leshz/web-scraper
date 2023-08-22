@@ -1,20 +1,21 @@
-import ora from 'ora'
 import { readAndLoadFile, writeFile } from './src/fileManager.js'
 import { launch, searchBalanceAmount } from './src/scrapper.js'
-import conf from './conf.json';
+import { start, success, spinner } from './src/helpers.js'
+import config from './conf.js'
 
 (async () => {
-  const spinner = ora('Loading scrapper').start()
-  const { url, timeout, debug, delimiter } = conf
+  start('Init scripting')
+  const { url, timeout, debug, delimiter } = config
+  success()
 
   const accounts = await readAndLoadFile({ delimiter })
-  const { page, browser } = await launch({ debug, timeout, spinner })
+  const { page, browser } = await launch({ debug, timeout })
   const output = [['user', 'pass', 'server']]
   for (const account of accounts) {
-    const result = await searchBalanceAmount({ url, account, timeout, page, spinner })
+    const result = await searchBalanceAmount({ url, account, timeout, page })
     output.push(result)
   }
-  await writeFile({ output, delimiter })
+  // await writeFile({ output, delimiter })
   await browser.close()
-  spinner.stop()
+  spinner.succeed('End scripting')
 })()
